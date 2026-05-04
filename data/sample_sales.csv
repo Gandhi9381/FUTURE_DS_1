@@ -1,0 +1,11 @@
+order_id,order_date,customer_id,region,state,category,product_name,segment,sales_channel,ship_mode,quantity,discount,sales,profit
+ORD-000001,2024-01-05,CUST-01001,North,Delhi,Technology,Laptop,Corporate,Online,Standard,2,0.05,2300.00,400.00
+ORD-000002,2024-01-06,CUST-01002,South,Karnataka,Furniture,Desk,Consumer,Retail,Express,1,0.10,450.00,60.00
+ORD-000003,2024-01-07,CUST-01003,East,West Bengal,Office Supplies,Paper,Home Office,Online,Standard,10,0.02,180.00,30.00
+ORD-000004,2024-01-08,CUST-01004,West,Maharashtra,Technology,Smartphone,Consumer,Partner,Same Day,1,0.08,950.00,150.00
+ORD-000005,2024-01-09,CUST-01005,North,Punjab,Furniture,Office Chair,Corporate,Retail,Standard,3,0.07,780.00,110.00
+ORD-000006,2024-01-10,CUST-01006,South,Kerala,Office Supplies,Notebook,Home Office,Online,Express,5,0.00,60.00,12.00
+ORD-000007,2024-01-11,CUST-01007,East,Odisha,Technology,Tablet,Consumer,Online,Standard,1,0.03,620.00,100.00
+ORD-000008,2024-01-12,CUST-01008,West,Gujarat,Office Supplies,Stapler,Corporate,Retail,Standard,2,0.00,32.00,8.00
+ORD-000009,2024-01-13,CUST-01009,North,Uttarakhand,Furniture,Dining Table,Consumer,Partner,Express,1,0.12,630.00,85.00
+ORD-000010,2024-01-14,CUST-01010,South,Telangana,Technology,Headphones,Home Office,Online,Standard,2,0.04,360.00,55.00

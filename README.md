@@ -27,12 +27,12 @@ Client-ready sales analysis project built with Python and Streamlit.
    python app.py
    ```
 
-## Netlify Deployment
-Netlify cannot run the Streamlit Python server directly. To make this repository deployable on Netlify, the root now includes a static landing page (`index.html`) and a `netlify.toml` config.
+Optional launcher flags:
 
-Use Netlify for the static front page, then host the Streamlit dashboard separately on Streamlit Community Cloud, Render, or a similar Python host.
-
-If you only want the static site on Netlify, just connect this repository and deploy the root folder. If you want the interactive dashboard live, deploy the Python app on another host and link it from the Netlify landing page.
+```bash
+python app.py --port 8502
+python app.py --no-browser
+```
 
 ## Using a Kaggle / Real Sales CSV
 To use a real Sales or Retail dataset (for example from Kaggle), download the CSV and place it in the project's `data/` folder. The dashboard will automatically load the first CSV it finds and fall back to the synthetic generator if none are present.

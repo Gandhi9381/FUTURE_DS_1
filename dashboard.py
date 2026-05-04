@@ -17,64 +17,6 @@ st.set_page_config(
 )
 
 
-CUSTOM_CSS = """
-<style>
-    .stApp {
-        background: radial-gradient(circle at top left, rgba(244, 196, 48, 0.12), transparent 28%),
-                    linear-gradient(180deg, #f7f3ea 0%, #f2eee6 100%);
-        color: #17324d;
-    }
-    .block-container {
-        padding-top: 1.25rem;
-        padding-bottom: 2rem;
-        max-width: 1350px;
-    }
-    h1, h2, h3 {
-        color: #17324d;
-    }
-    .hero {
-        background: linear-gradient(135deg, #17324d 0%, #2f5d7c 52%, #d97706 100%);
-        color: white;
-        border-radius: 24px;
-        padding: 1.5rem 1.7rem;
-        box-shadow: 0 18px 45px rgba(23, 50, 77, 0.2);
-    }
-    .hero h1 {
-        color: white;
-        margin-bottom: 0.2rem;
-    }
-    .hero p {
-        margin: 0;
-        opacity: 0.92;
-    }
-    .insight-box {
-        background: rgba(255,255,255,0.78);
-        border: 1px solid rgba(23,50,77,0.1);
-        border-radius: 18px;
-        padding: 1rem 1.1rem;
-        box-shadow: 0 12px 32px rgba(23, 50, 77, 0.08);
-    }
-    div[data-testid="metric-container"] {
-        background: rgba(255,255,255,0.92);
-        border: 1px solid rgba(23,50,77,0.08);
-        padding: 0.85rem 1.4rem;
-        border-radius: 18px;
-        box-shadow: 0 12px 34px rgba(23, 50, 77, 0.08);
-    }
-    .stActionButton>button {
-        background: linear-gradient(90deg, #17324d, #2f5d7c);
-        color: white;
-        border-radius: 12px;
-        padding: 8px 12px;
-        box-shadow: 0 6px 18px rgba(47,93,124,0.18);
-        border: none;
-    }
-</style>
-"""
-
-st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
-
-
 @st.cache_data(show_spinner=False)
 def get_data() -> pd.DataFrame:
     return sd.load_sales_data(rows=1400, seed=42)
@@ -122,13 +64,14 @@ if filtered.empty:
     st.stop()
 
 filtered["month_label"] = filtered["order_date"].dt.to_period("M").astype(str)
-filtered["profit_margin"] = filtered["profit"] / filtered["order_value"]
+filtered["profit_margin"] = (filtered["profit"] / filtered["order_value"].replace(0, pd.NA)).fillna(0.0)
 
 total_sales = filtered["sales"].sum()
 total_profit = filtered["profit"].sum()
 orders = filtered["order_id"].nunique()
 avg_order_value = filtered["order_value"].mean()
-margin = filtered["profit"].sum() / filtered["order_value"].sum()
+order_value_sum = filtered["order_value"].sum()
+margin = (total_profit / order_value_sum) if order_value_sum else 0.0
 
 top_product = filtered.groupby("product_name", as_index=False)["sales"].sum().sort_values("sales", ascending=False).iloc[0]
 top_category = filtered.groupby("category", as_index=False)["sales"].sum().sort_values("sales", ascending=False).iloc[0]
@@ -138,17 +81,8 @@ monthly = filtered.groupby("month_label", as_index=False)[["sales", "profit"]].s
 category_perf = filtered.groupby("category", as_index=False)[["sales", "profit"]].sum().sort_values("sales", ascending=False)
 region_perf = filtered.groupby("region", as_index=False)[["sales", "profit"]].sum().sort_values("sales", ascending=False)
 
-st.markdown(
-    f"""
-    <div class="hero">
-        <h1>Business Sales Performance Dashboard</h1>
-        <p>Revenue trends, top-selling products, high-value categories, and regional performance in one client-ready view.</p>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
-
-st.write("")
+st.title("Business Sales Performance Dashboard")
+st.caption("Revenue trends, top-selling products, high-value categories, and regional performance in one client-ready view.")
 
 col1, col2, col3, col4, col5 = st.columns(5)
 col1.metric("Revenue", money(total_sales))
@@ -213,14 +147,13 @@ with right:
         f"Leading region: {top_region['region']} ({money(top_region['sales'])})",
         f"Margin health: {pct(margin * 100)} overall profit margin",
     ]
-    st.markdown('<div class="insight-box">', unsafe_allow_html=True)
     st.subheader("Quick Insights")
     for item in insight_items:
         st.markdown(f"- {item}")
     st.subheader("Actionable View")
-    st.markdown(
-        "Focus on the highest-margin product-category pairs, protect the strongest region with inventory planning, and target discount-heavy products for pricing review.")
-    st.markdown("</div>", unsafe_allow_html=True)
+    st.info(
+        "Focus on the highest-margin product-category pairs, protect the strongest region with inventory planning, and target discount-heavy products for pricing review."
+    )
 
 bottom_left, bottom_right = st.columns(2)
 
@@ -268,6 +201,15 @@ st.dataframe(
     hide_index=True,
 )
 
+export_df = filtered.copy()
+export_df["order_date"] = export_df["order_date"].dt.strftime("%Y-%m-%d")
+st.download_button(
+    "Download filtered data (CSV)",
+    data=export_df.to_csv(index=False).encode("utf-8"),
+    file_name="filtered_sales_data.csv",
+    mime="text/csv",
+)
+
 st.subheader("Business Recommendations")
 recommendations = [
     f"Scale {top_category['category']} through inventory and bundle offers because it contributes the highest revenue share.",
@@ -277,8 +219,6 @@ recommendations = [
 ]
 for recommendation in recommendations:
     st.markdown(f"- {recommendation}")
-
-from pathlib import Path
 
 data_source = get_data_source()
 st.caption(f"Data source: {data_source}. To use a Kaggle dataset, place the CSV into the `data/` folder.")

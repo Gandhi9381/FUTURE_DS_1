@@ -153,7 +153,39 @@ def _find_local_csv() -> Optional[str]:
 
 def _load_csv(path: str) -> Optional[pd.DataFrame]:
     try:
-        df = pd.read_csv(path, parse_dates=["order_date"], infer_datetime_format=True)
+        df = pd.read_csv(path)
+        df = _normalize_csv_columns(df)
+        if "order_date" in df.columns:
+            df["order_date"] = pd.to_datetime(df["order_date"], errors="coerce")
         return clean_sales_data(df)
     except Exception:
         return None
+
+
+def _normalize_csv_columns(df: pd.DataFrame) -> pd.DataFrame:
+    normalized = df.copy()
+    normalized.columns = [column.strip().lower().replace(" ", "_") for column in normalized.columns]
+
+    alias_map = {
+        "date": "order_date",
+        "orderdate": "order_date",
+        "invoice_date": "order_date",
+        "sales_amount": "sales",
+        "revenue": "sales",
+        "product": "product_name",
+        "item": "product_name",
+        "customer_segment": "segment",
+    }
+
+    rename_dict = {column: alias_map[column] for column in normalized.columns if column in alias_map}
+    if rename_dict:
+        normalized = normalized.rename(columns=rename_dict)
+
+    if "discount" not in normalized.columns:
+        normalized["discount"] = 0.0
+    if "quantity" not in normalized.columns:
+        normalized["quantity"] = 1
+    if "profit" not in normalized.columns and "sales" in normalized.columns:
+        normalized["profit"] = pd.to_numeric(normalized["sales"], errors="coerce") * 0.15
+
+    return normalized
