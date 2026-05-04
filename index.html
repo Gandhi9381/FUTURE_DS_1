@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Business sales analytics dashboard with KPI cards, trend analysis, and forecasting." />
+  <title>Business Sales Analytics</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: rgba(15, 23, 42, 0.72);
+      --panel-2: rgba(255, 255, 255, 0.08);
+      --text: #e5eefc;
+      --muted: #b7c5de;
+      --accent: #f59e0b;
+      --accent-2: #38bdf8;
+      --border: rgba(255,255,255,0.12);
+      --shadow: 0 24px 80px rgba(0,0,0,0.35);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(245, 158, 11, 0.20), transparent 25%),
+        radial-gradient(circle at 80% 0%, rgba(56, 189, 248, 0.18), transparent 24%),
+        linear-gradient(180deg, #020617 0%, #0f172a 55%, #111827 100%);
+      min-height: 100vh;
+    }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 32px 20px 56px; }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 24px;
+      align-items: stretch;
+      padding: 32px;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(15,23,42,.88), rgba(15,23,42,.58));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+    .eyebrow {
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, 0.14);
+      color: #fde68a;
+      border: 1px solid rgba(245, 158, 11, 0.22);
+      font-size: 0.9rem;
+      margin-bottom: 18px;
+    }
+    h1 { font-size: clamp(2.4rem, 5vw, 4.8rem); line-height: 0.98; margin: 0 0 16px; }
+    p { color: var(--muted); line-height: 1.7; }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 14px 18px; border-radius: 16px; text-decoration: none; font-weight: 700;
+      border: 1px solid transparent; transition: transform .2s ease, border-color .2s ease, background .2s ease;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn.primary { background: linear-gradient(90deg, var(--accent), #fb7185); color: #111827; }
+    .btn.secondary { background: rgba(255,255,255,0.06); color: var(--text); border-color: var(--border); }
+    .panel {
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      border: 1px solid var(--border);
+      padding: 22px;
+    }
+    .stat-grid { display: grid; gap: 14px; grid-template-columns: repeat(2, minmax(0,1fr)); margin-top: 16px; }
+    .stat {
+      border-radius: 18px; padding: 18px; background: var(--panel-2); border: 1px solid var(--border);
+    }
+    .stat strong { display: block; font-size: 1.6rem; color: white; margin-bottom: 6px; }
+    .section { margin-top: 24px; }
+    .grid-3 { display: grid; gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .card {
+      min-height: 170px; border-radius: 22px; padding: 20px;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+    }
+    .card h3 { margin: 0 0 8px; }
+    .note { font-size: 0.95rem; color: var(--muted); }
+    .footer { margin-top: 22px; color: var(--muted); font-size: 0.92rem; }
+    @media (max-width: 920px) {
+      .hero, .grid-3 { grid-template-columns: 1fr; }
+      .wrap { padding: 18px; }
+      .stat-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 540px) {
+      .stat-grid { grid-template-columns: 1fr; }
+      .hero { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Sales analytics built for quick deployment</div>
+        <h1>Business Sales Dashboard</h1>
+        <p>
+          A polished sales and retail analytics experience with KPI cards, interactive filters,
+          time series analysis, category and region performance views, plus forecasting.
+          This static site is Netlify-ready. The Streamlit app should be hosted separately.
+        </p>
+        <div class="cta-row">
+          <a class="btn primary" href="https://streamlit.io/" target="_blank" rel="noreferrer">Host the live app</a>
+          <a class="btn secondary" href="README.md">Read deployment notes</a>
+        </div>
+      </div>
+      <aside class="panel">
+        <h2 style="margin-top:0">What’s included</h2>
+        <div class="stat-grid">
+          <div class="stat"><strong>KPIs</strong><span class="note">Revenue, profit, orders, margin</span></div>
+          <div class="stat"><strong>Filters</strong><span class="note">Date, region, category, segment</span></div>
+          <div class="stat"><strong>Charts</strong><span class="note">Trend, category, region breakdowns</span></div>
+          <div class="stat"><strong>Model</strong><span class="note">RandomForest forecast prototype</span></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section grid-3">
+      <div class="card">
+        <h3>Netlify-ready</h3>
+        <p>Deploy this static landing page directly on Netlify with no build step needed.</p>
+      </div>
+      <div class="card">
+        <h3>Streamlit backend</h3>
+        <p>Keep the interactive dashboard on Streamlit Community Cloud, Render, or another Python host.</p>
+      </div>
+      <div class="card">
+        <h3>Kaggle data</h3>
+        <p>Drop a Kaggle CSV into <code>data/</code> and the Streamlit app will use it automatically.</p>
+      </div>
+    </section>
+
+    <div class="footer">
+      If you want, I can next add a CI workflow and a one-click Netlify deploy button for this static entry page.
+    </div>
+  </main>
+</body>
+</html>
